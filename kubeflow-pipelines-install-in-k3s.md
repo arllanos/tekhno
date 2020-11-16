@@ -16,9 +16,9 @@ kubectl get pods -n kubeflow
 
 ## Verify that the Kubeflow Pipelines UI is accessible by port-forwarding
 ```bash
-kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8080:80
+kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8081:80
 ```
-Then, open the Kubeflow Pipelines UI at http://localhost:8080/
+Then, open the Kubeflow Pipelines UI at http://localhost:8081/
 
 ## Accessing other services
 ```bash
