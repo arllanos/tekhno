@@ -1,11 +1,11 @@
 # Kubeflow Pipelines development
 
-## Provisioning a kubernetes cluster
+## Provisioning kubernetes cluster
 For development you need a local or remote cluster so Pipelines code can connect to services like MinIO, Mysql or even then Kubernetes API Server.
 For a local Kubernetes cluster, [K3S](https://k3s.io/) is recommended. It is a lightweight and fully functional certified distribution of Kubernetes by Rancher.
 
 - [Install k3s on Linux/Mac](https://k3s.io/).
-- [Install k3s on WSL 2](https://github.com/arllanos/tech-notes/blob/master/k3s-install.md).
+- [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-install.md).
 
 ## Setting up local dev environment for Kubeflow Pipelines Backend
 1. Install Go 1.13.x
@@ -15,7 +15,7 @@ For a local Kubernetes cluster, [K3S](https://k3s.io/) is recommended. It is a l
 apt-get update && apt-get install -y cmake clang musl-dev openssl
 ```
 
-3. [Install Kubeflow pipelines](https://github.com/arllanos/tech-notes/blob/master/kubeflow-pipelines-install-in-k3s.md).
+3. [Install Kubeflow pipelines](https://github.com/arllanos/tekhno/blob/master/kubeflow-pipelines-install-in-k3s.md).
 
 4. Edit `backend/src/apiserver/config/config.json` to point to your dev Mysql and Minio instances.
 The following config has been added
@@ -128,7 +128,7 @@ fi
 docker push ${IMAGE_TAG}/api-server:latest
 ```
 
-## Backend Pods / image
+## Backend deployments / image
 
 | NAME | SRC CODE PATH | IMAGE |
 |---|---|---|
@@ -141,12 +141,12 @@ docker push ${IMAGE_TAG}/api-server:latest
 | cache-server | backend/src/cache | cache-server |
 
 
-## Frontend Pods / image
+## Frontend deployments / image
 | NAME | SRC CODE PATH | IMAGE |
 |---|---|---|
 | ml-pipeline-ui | frontend | frontend |
 
-## Other Pods / image
+## Other deployments / image
 | NAME | SRC CODE PATH | IMAGE |
 |---|---|---|
 | metadata-writer | | |
