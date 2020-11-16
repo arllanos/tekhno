@@ -1,0 +1,2 @@
+# tekhno
+technical notes
