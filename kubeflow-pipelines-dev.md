@@ -52,6 +52,7 @@ GO111MODULE=on go build -o bin/apiserver backend/src/apiserver/*.go
 ```
 
 6. Hack so local code run as in-cluster
+> This need to be repeated after each computer and/or cluster restart
 ```bash
 # copy in-cluster service account at /var/run/secrets/kubernetes.io/serviceaccount to local dev
 sudo mkdir -p /var/run/secrets/kubernetes.io/serviceaccount
@@ -67,18 +68,24 @@ sudo mv $HOME/token /var/run/secrets/kubernetes.io/serviceaccount
 # copy samples to /samples in local dev
 kubectl cp kubeflow/$POD:/samples/ $HOME/samples/
 sudo mv  $HOME/samples /
-
-# expose kubernetes API server on localhost
-kubectl proxy --port=8080 &
-# expose mysql
-kubectl port-forward -n kubeflow svc/mysql 3306
-# expose minio
-kubectl port-forward -n kubeflow svc/minio-service 9000
-# expose visualization server (note this will listen on 8889 locally)
-kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888
 ```
 
-7. Configure `launch.json` to be able to debug in vscode.
+7. Expose cluster services locally
+```bash
+# expose kubernetes API server on localhost
+kubectl proxy --port=8080 &
+
+# expose mysql
+kubectl port-forward -n kubeflow svc/mysql 3306 &
+
+# expose minio
+kubectl port-forward -n kubeflow svc/minio-service 9000 &
+
+# expose visualization server (note this will listen on 8889 locally)
+kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888 &
+```
+
+8. Configure `launch.json` to be able to debug in vscode.
 ```json
 {
     "version": "0.2.0",
@@ -103,7 +110,7 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888
     ]
 }
 ```
-8. You can now debug Pipelines apiserver locally in vscode.
+9. You can now debug Pipelines apiserver locally in vscode.
 
 ## Build and push changed images
 ```bash
