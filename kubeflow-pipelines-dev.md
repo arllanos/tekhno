@@ -21,6 +21,7 @@ apt-get update && apt-get install -y cmake clang musl-dev openssl
 The following config has been added
 - `DBConfig.Host`
 - `ObjectStoreConfig.Host`
+- `ObjectStoreConfig.Port`
 
 Optionally change `DBName` and `BucketName` to use separate DB and Bucket for dev
 ```json
@@ -34,6 +35,7 @@ Optionally change `DBName` and `BucketName` to use separate DB and Bucket for de
   },
   "ObjectStoreConfig": {
     "Host": "127.0.0.1",
+    "Port": "9000",
     "AccessKey": "minio",
     "SecretAccessKey": "minio123",
     "BucketName": "devmlpipeline",
