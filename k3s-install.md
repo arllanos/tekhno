@@ -66,13 +66,14 @@ ip addr show dev eth0 | grep "inet " | awk '{print $2}' | cut -d'/' -f1
 3. Edit the kubeconfig file and change the server URL from `https://<127_0_0_1_or_previous_ip>:6443` to the IP returned by the previous command.
 
 4. (Optional) Copy kubconfig file from WSL `$HOME/.kube/config` to your home in Windows `%HOME%\.kube\config`:
-
 ```bash
-cp ~/.kube/config /mnt/c/Users/ariel.llanos/.kube/
+WINHOME=`wslpath "$(wslvar USERPROFILE)"`
+cp ~/.kube/config $WINHOME/.kube/
 ```
-5. Run `kubectl` from Windows or WSL. You can download and install kubectl by following the kubectl [installation guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
+5. Run `kubectl`.
 ```bash
 kubectl get nodes
 ```
+> For installing kubectl follow the [installation guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 ## Credits
 Adapted from [K3s on WSL: Quick Start Guide](https://gist.github.com/ibuildthecloud/1b7d6940552ada6d37f54c71a89f7d00).
