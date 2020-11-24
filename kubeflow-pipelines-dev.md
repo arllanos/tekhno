@@ -5,7 +5,7 @@ For development you need a local or remote cluster so Pipelines code can connect
 For a local Kubernetes cluster, [K3S](https://k3s.io/) is recommended. It is a lightweight and fully functional certified distribution of Kubernetes by Rancher.
 
 - [Install k3s on Linux/Mac](https://k3s.io/).
-- [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-install.md).
+- [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-on-wsl-install.md).
 
 ## Setting up local dev environment for Kubeflow Pipelines Backend
 1. Install Go 1.13.x
@@ -15,7 +15,18 @@ For a local Kubernetes cluster, [K3S](https://k3s.io/) is recommended. It is a l
 apt-get update && apt-get install -y cmake clang musl-dev openssl
 ```
 
-3. [Install Kubeflow pipelines](https://github.com/arllanos/tekhno/blob/master/kubeflow-pipelines-install-in-k3s.md).
+3. Install Kubeflow pipelines
+```bash
+export PIPELINE_VERSION=1.0.4
+
+kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=$PIPELINE_VERSION"
+
+kubectl wait --for condition=established --timeout=60s crd/applications.app.k8s.io
+
+kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env/platform-agnostic-pns?ref=$PIPELINE_VERSION"
+
+kubectl get pods -n kubeflow
+```
 
 4. Edit `backend/src/apiserver/config/config.json` to point to your dev Mysql and Minio instances.
 The following config has been added
