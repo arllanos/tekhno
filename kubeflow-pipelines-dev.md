@@ -116,7 +116,7 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888 &
                 "ML_PIPELINE_VISUALIZATIONSERVER_SERVICE_PORT": "8889"
             },
             "args": [
-                "--config=backend/src/apiserver/config",
+                "--config=${workspaceFolder}/backend/src/apiserver/config",
                 "--sampleconfig=config/sample_config.json",
                 "-logtostderr=true"]
         }
