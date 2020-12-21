@@ -127,6 +127,8 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888 &
 
 ## Build and push changed images
 ```bash
+export DOCKER_REGISTRY=docker.io
+# export DOCKER_REGISTRY=gcr.io
 export DOCKER_USER=<myuser>
 export DOCKER_PASSWORD=<mypassword>
 
@@ -134,7 +136,7 @@ export DOCKER_PASSWORD=<mypassword>
 echo $DOCKER_PASSWORD |docker login $DOCKER_REGISTRY --username=$DOCKER_USER --password-stdin
 
 # tag choose tagging for either docker hub or private registry
-IMAGE_TAG=$DOCKER_REGISTRY/$DOCKER_USER
+IMAGE_TAG=$DOCKER_REGISTRY/$DOCKER_USER/api-server
 # IMAGE_TAG=ml-pipeline/api-server
 
 if [ $MACHINE_ARCH == "aarch64" ]; then
