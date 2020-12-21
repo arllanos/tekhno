@@ -147,7 +147,7 @@ else
     docker build -t "${IMAGE_TAG}" -f backend/Dockerfile .
 fi
 
-docker push ${IMAGE_TAG}/api-server:latest
+docker push ${IMAGE_TAG}
 ```
 
 ## Backend deployments / image
