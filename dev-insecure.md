@@ -1,7 +1,6 @@
 
 # Workarounds for issues caused by corporate newtork overriding SSL certificates
-
-Problem is described [here](https://security.stackexchange.com/questions/177759/what-is-the-best-practice-when-corporate-network-is-overwriting-ssl-certificates).
+The issue of working behind a corporate proxy server is described [here](https://security.stackexchange.com/questions/177759/what-is-the-best-practice-when-corporate-network-is-overwriting-ssl-certificates).
 
 Solutions for differents dev tools below.
 
@@ -19,9 +18,11 @@ sudo apt-get install apt-transport-https ca-certificates -y
 sudo update-ca-certificates
 
 # fetch certificates and put to the list of locally checked certificates
-openssl s_client -showcerts -servername github.com -connect github.com:443 </dev/null 2>/dev/null | sed -n -e '/BEGIN\ CERTIFICATE/,/END\ CERTIFICATE/ p' > github.com.pem
-cat github.com.pem | sudo tee -a /etc/ssl/certs/ca-certificates.crt
+HOST=github.com
+openssl s_client -showcerts -servername $HOST -connect $HOST:443 </dev/null 2>/dev/null | sed -n -e '/BEGIN\ CERTIFICATE/,/END\ CERTIFICATE/ p' > $HOST.pem
+cat $HOST.pem | sudo tee -a /etc/ssl/certs/ca-certificates.crt
 ```
+> Note: should work for other hosts by changing the value of HOST variable
 
 ## Workaround: for pip install
 ```bash
