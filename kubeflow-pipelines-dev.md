@@ -125,30 +125,25 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888 &
 ```
 9. You can now debug Pipelines apiserver locally in vscode.
 
-## Build and push changed images
+## Build and push image
+To build the API server image and upload it to docker hub on x86_64 machines:
 ```bash
 export DOCKER_REGISTRY=docker.io
-# export DOCKER_REGISTRY=gcr.io
 export DOCKER_USER=<myuser>
 export DOCKER_PASSWORD=<mypassword>
 
-# To build the API server image and upload it to GCR on x86_64 machines:
 echo $DOCKER_PASSWORD |docker login $DOCKER_REGISTRY --username=$DOCKER_USER --password-stdin
 
-# tag choose tagging for either docker hub or private registry
-IMAGE_TAG=$DOCKER_REGISTRY/$DOCKER_USER/api-server
-# IMAGE_TAG=ml-pipeline/api-server
+# choose tagging for either docker hub or private registry
+IMAGE=$DOCKER_REGISTRY/$DOCKER_USER/api-server
+TAG=latest
 
-if [ $MACHINE_ARCH == "aarch64" ]; then
-    # build API server image oad it to GCR on x86_64 machines:
-    docker build -t bazel:0.24.0 -f backend/Dockerfile.bazel .
-    docker build -t "${IMAGE_TAG}" -f backend/Dockerfile --build-arg BAZEL_IMAGE=bazel:0.24.0 .
-else
-    docker build -t "${IMAGE_TAG}" -f backend/Dockerfile .
-fi
+docker build -t "${IMAGE}:${TAG}" -f backend/Dockerfile .
 
-docker push ${IMAGE_TAG}
+docker push ${IMAGE}:${TAG}
+
 ```
+For other machine architectures or to use gcr.io registry, check [developer_guide.md](https://github.com/kubeflow/pipelines/blob/master/developer_guide.md)
 
 ## Backend deployments / image
 
