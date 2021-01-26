@@ -126,7 +126,7 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888 &
 9. You can now debug Pipelines apiserver locally in vscode.
 
 ## Build and push image
-To build the API server image and upload it to docker hub on x86_64 machines:
+To build the API server image and upload it to **docker hub** on x86_64 machines:
 ```bash
 export DOCKER_REGISTRY=docker.io
 export DOCKER_USER=<myuser>
@@ -134,7 +134,6 @@ export DOCKER_PASSWORD=<mypassword>
 
 echo $DOCKER_PASSWORD |docker login $DOCKER_REGISTRY --username=$DOCKER_USER --password-stdin
 
-# choose tagging for either docker hub or private registry
 IMAGE=$DOCKER_REGISTRY/$DOCKER_USER/api-server
 TAG=latest
 
