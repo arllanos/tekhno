@@ -22,15 +22,15 @@ HOST=github.com
 openssl s_client -showcerts -servername $HOST -connect $HOST:443 </dev/null 2>/dev/null | sed -n -e '/BEGIN\ CERTIFICATE/,/END\ CERTIFICATE/ p' > $HOST.pem
 cat $HOST.pem | sudo tee -a /etc/ssl/certs/ca-certificates.crt
 ```
-> Note: should work for other hosts by changing the value of HOST variable
+> Note: should work for other hosts by changing the value of HOST variable, e.g., `HOST=docker.com`
 
 ## Workaround: for pip install
 ```bash
-pip install <packagename> --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org
+pip3 install <packagename> --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org
 # example 1
-pip install labs-sdk-python --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org
+pip3 install labs-sdk-python --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org
 # example 2
-ip install pandas --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org
+pip3 install pandas --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org
 ```
 
 ## Workaround: node / nvm
