@@ -7,7 +7,8 @@ For a local Kubernetes cluster, [K3S](https://k3s.io/) is recommended. It is a l
 - [Install k3s on Linux/Mac](https://k3s.io/).
 - [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-on-wsl-install.md).
 
-## Setting up local dev environment for Kubeflow Pipelines Backend
+## Backend
+### Setting up local dev environment for Kubeflow Pipelines
 1. Install Go 1.13.x
 
 2. Install dependencies
@@ -125,7 +126,7 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888 &
 ```
 9. You can now debug Pipelines apiserver locally in vscode.
 
-## Build and push image
+### Build and push image
 To build the API server image and upload it to **docker hub** on x86_64 machines:
 ```bash
 export DOCKER_REGISTRY=docker.io
@@ -156,13 +157,19 @@ For other machine architectures or to use gcr.io registry, check [developer_guid
 | cache-deployer-deployment | backend/src/cache/deployer | cache-deployer |
 | cache-server | backend/src/cache | cache-server |
 
+## Frontend
+Follow instructions in frontend/README.md
+Also make sure to do edit frontend/package.json and set proxy to hit the right backend api-server port.
+```json
+"proxy": "http://localhost:8888",
+```
 
-## Frontend deployments / image
+### Frontend deployments / image
 | NAME | SRC CODE PATH | IMAGE |
 |---|---|---|
 | ml-pipeline-ui | frontend | frontend |
 
-## Other deployments / image
+### Other deployments / image
 | NAME | SRC CODE PATH | IMAGE |
 |---|---|---|
 | metadata-writer | | |
