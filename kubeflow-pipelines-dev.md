@@ -1,22 +1,17 @@
 # Kubeflow Pipelines development
 
-## Provisioning kubernetes cluster
-For development you need a local or remote cluster so Pipelines code can connect to services like MinIO, Mysql or even then Kubernetes API Server.
-For a local Kubernetes cluster, [K3S](https://k3s.io/) is recommended. It is a lightweight and fully functional certified distribution of Kubernetes by Rancher.
+Currently API server is not able to run locally as it performs a kubernetes client initialization trying to read in-cluster config rather than load kubeconfig. This limitation is addressed in this [issue](https://github.com/kubeflow/pipelines/issues/4738). Meanwhile for running locally we can follow this guide.
 
-- [Install k3s on Linux/Mac](https://k3s.io/).
-- [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-on-wsl-install.md).
+## Provisioning kubernetes cluster with Kubeflow Pipelines
+For development you need a local or remote cluster so Pipelines code can connect to services like MinIO, Mysql and Kubernetes API Server.
 
-## Backend
-### Setting up local dev environment for Kubeflow Pipelines
-1. Install Go 1.13.x
+For a local Kubernetes cluster, depending on available resources, recommended options are:
+- [MiniKF](https://www.kubeflow.org/docs/started/workstation/getting-started-minikf/). Full-fledged local kubeflow deployment by Arrikto.
+- [K3S](https://k3s.io/). Lightweight and fully functional certified distribution of Kubernetes by Rancher. Alternative to miniKF if RAM or CPU resources are scarce. If using this option, need to install Kubeflow pipelines on top of it.
+  - [Install k3s on Linux/Mac](https://k3s.io/).
+  - [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-on-wsl-install.md).
 
-2. Install dependencies
-```
-apt-get update && apt-get install -y cmake clang musl-dev openssl
-```
-
-3. Install Kubeflow pipelines
+### Install Kubeflow pipelines (If using K3s)
 ```bash
 export PIPELINE_VERSION=1.0.4
 
@@ -29,20 +24,34 @@ kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env/platform
 kubectl get pods -n kubeflow
 ```
 
+## Backend
+### Setting up local dev environment for Kubeflow Pipelines
+1. Install Go 1.13.x
+
+2. Install dependencies
+```
+apt-get update && apt-get install -y cmake clang musl-dev openssl
+```
+
+3. Compile
+```bash
+GO111MODULE=on go build -o bin/apiserver backend/src/apiserver/*.go
+```
+
 4. Edit `backend/src/apiserver/config/config.json` to point to your dev Mysql and Minio instances.
 The following config has been added
 - `DBConfig.Host`
 - `ObjectStoreConfig.Host`
 - `ObjectStoreConfig.Port`
 
-Optionally change `DBName` and `BucketName` to use separate DB and Bucket for dev
+Optionally change `DBConfig.DBName` and `ObjectStoreConfig.BucketName` to use separate DB and Bucket for dev
 ```json
 {
   "DBConfig": {
     "Host": "127.0.0.1",
     "DriverName": "mysql",
     "DataSourceName": "",
-    "DBName": "devmlpipeline",
+    "DBName": "mlpipeline",
     "GroupConcatMaxLen": "4194304"
   },
   "ObjectStoreConfig": {
@@ -50,7 +59,7 @@ Optionally change `DBName` and `BucketName` to use separate DB and Bucket for de
     "Port": "9000",
     "AccessKey": "minio",
     "SecretAccessKey": "minio123",
-    "BucketName": "devmlpipeline",
+    "BucketName": "mlpipeline",
     "PipelinePath": "pipelines"
   },
   "InitConnectionTimeout": "6m",
@@ -60,12 +69,8 @@ Optionally change `DBName` and `BucketName` to use separate DB and Bucket for de
 }
 
 ```
-5. Compile
-```bash
-GO111MODULE=on go build -o bin/apiserver backend/src/apiserver/*.go
-```
 
-6. Hack so local code run as in-cluster
+5. Hack so local code run as in-cluster
 > This need to be repeated after each computer and/or cluster restart
 ```bash
 # copy in-cluster service account at /var/run/secrets/kubernetes.io/serviceaccount to local dev
@@ -84,7 +89,7 @@ kubectl cp kubeflow/$POD:/samples/ $HOME/samples/
 sudo mv  $HOME/samples /
 ```
 
-7. Expose cluster services locally
+6. Expose cluster services locally
 ```bash
 # expose kubernetes API server on localhost
 kubectl proxy --port=8080 &
@@ -99,7 +104,7 @@ kubectl port-forward -n kubeflow svc/minio-service 9000 &
 kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888 &
 ```
 
-8. Configure `launch.json` to be able to debug in vscode.
+7. Configure `launch.json` to be able to debug in vscode.
 ```json
 {
     "version": "0.2.0",
@@ -124,10 +129,10 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888 &
     ]
 }
 ```
-9. You can now debug Pipelines apiserver locally in vscode.
+8. You can now debug Pipelines apiserver locally in vscode.
 
 ### Build and push image
-To build the API server image and upload it to **docker hub** on x86_64 machines:
+To build the API server image and upload it to your own **docker hub** on x86_64 machines:
 ```bash
 export DOCKER_REGISTRY=docker.io
 export DOCKER_USER=<myuser>
@@ -145,7 +150,7 @@ docker push ${IMAGE}:${TAG}
 ```
 For other machine architectures or to use gcr.io registry, check [developer_guide.md](https://github.com/kubeflow/pipelines/blob/master/developer_guide.md)
 
-## Backend deployments / image
+## Backend deployments / images
 
 | NAME | SRC CODE PATH | IMAGE |
 |---|---|---|
@@ -159,7 +164,7 @@ For other machine architectures or to use gcr.io registry, check [developer_guid
 
 ## Frontend
 Follow instructions in frontend/README.md
-Also make sure to do edit frontend/package.json and set proxy to hit the right backend api-server port.
+Also make sure to do edit `frontend/package.json` and set proxy to hit the right backend api-server port.
 ```json
 "proxy": "http://localhost:8888",
 ```
