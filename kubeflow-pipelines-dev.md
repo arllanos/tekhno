@@ -137,7 +137,7 @@ kubectl port-forward -n kubeflow svc/ml-pipeline-visualizationserver 8889:8888 &
 ### Build and push image
 To build the API server image and upload it to your own **docker hub** on x86_64 machines:
 ```bash
-export DOCKER_REGISTRY=docker.io
+export DOCKER_REGISTRY=<docker.io|other>
 export DOCKER_USER=<myuser>
 export DOCKER_PASSWORD=<mypassword>
 
@@ -149,8 +149,13 @@ TAG=latest
 docker build -t "${IMAGE}:${TAG}" -f backend/Dockerfile .
 
 docker push ${IMAGE}:${TAG}
-
 ```
+
+To get details for cluster registry 
+```
+kubectl get secret -n kubeflow regcred -o jsonpath='{.data}' | sed 's/\.//' | jq .dockerconfigjson | tr -d \" | base64 -d | jq .auths 
+```
+
 For other machine architectures or to use gcr.io registry, check [developer_guide.md](https://github.com/kubeflow/pipelines/blob/master/developer_guide.md)
 
 ## Backend deployments / images
