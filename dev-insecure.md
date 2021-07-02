@@ -24,6 +24,21 @@ cat $HOST.pem | sudo tee -a /etc/ssl/certs/ca-certificates.crt
 ```
 > Note: should work for other hosts by changing the value of HOST variable, e.g., `HOST=docker.com`
 
+## Workaround: issues building Docker images
+If `docker build` complains about certificates during build, fetching the certificates explicitely in the Dockerfile may solve the issue.
+For example below github.cm and gonum.org certs are fetched before running the `go build` 
+```bash
+RUN HOST=github.com && openssl s_client -showcerts -servername $HOST -connect $HOST:443 </dev/null 2>/dev/null | sed -n -e '/BEGIN\ CERTIFICATE/,/END\ CERTIFICATE/ p' > $HOST.pem && cat $HOST.pem | tee -a /etc/ssl/certs/ca-certificates.crt
+
+RUN HOST=gonum.org && openssl s_client -showcerts -servername $HOST -connect $HOST:443 </dev/null 2>/dev/null | sed -n -e '/BEGIN\ CERTIFICATE/,/END\ CERTIFICATE/ p' > $HOST.pem && cat $HOST.pem | tee -a /etc/ssl/certs/ca-certificates.crt
+
+RUN if [ "$(uname -m)" = "aarch64" ]; then \
+        CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o webhook -a . ; \
+    else \
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o webhook -a . ; \
+    fi
+```
+
 ## Workaround: for pip install
 ```bash
 pip3 install <packagename> --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org
