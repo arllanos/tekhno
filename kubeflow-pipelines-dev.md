@@ -12,9 +12,12 @@ For a local Kubernetes cluster, depending on available resources, recommended op
   - [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-on-wsl-install.md).
 
 ### Install Kubeflow pipelines (If using K3s)
-> Note: This is a standalone deployment of pipelines. Check updated standalone deployment doc [here](https://www.kubeflow.org/docs/components/pipelines/installation/standalone-deployment/).
+> Note: This is a standalone deployment of pipelines. Check updated standalone deployment docs:
+> - [Standalone](https://www.kubeflow.org/docs/components/pipelines/installation/standalone-deployment/).
+> - [Standalone local cluster](https://www.kubeflow.org/docs/components/pipelines/installation/localcluster-deployment/#deploying-kubeflow-pipelines).
+
 ```bash
-export PIPELINE_VERSION=1.0.5
+export PIPELINE_VERSION=1.7.0-rc.4
 
 kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=$PIPELINE_VERSION"
 
