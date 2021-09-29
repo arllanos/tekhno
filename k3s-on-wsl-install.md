@@ -46,12 +46,18 @@ You can't install k3s using the curl script because there is no supervisor (syst
 
 1. Download k3s binary from https://github.com/rancher/k3s/releases/latest
 ```bash
-# wget https://github.com/rancher/k3s/releases/download/v1.19.3%2Bk3s2/k3s
-wget https://github.com/rancher/k3s/releases/download/v1.19.3%2Bk3s3/k3s
+# wget https://github.com/rancher/k3s/releases/download/v1.19.3%2Bk3s3/k3s
+wget https://github.com/k3s-io/k3s/releases/download/v1.20.11%2Bk3s1/k3s
 ```
 2. `chmod +x k3s`
-3. Run k3s `sudo ./k3s server`
-
+3. Run k3s 
+```
+sudo ./k3s server 
+```
+Note: if plan to install and use Istio, need to disable traefik
+```
+sudo ./k3s server --disable traefik
+```
 ## Setup access to k3s
 1. Copy `/etc/rancher/k3s/k3s.yaml` to `$HOME/.kube/config`.
 ```bash
