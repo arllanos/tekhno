@@ -13,7 +13,7 @@ git clone https://github.com/microsoft/WSL2-Linux-Kernel.git
 cd WSL2-Linux-Kernel
 
 # Install "compile kernel" tools
-sudp apt update
+sudo apt update
 sudo apt install build-essential flex bison libssl-dev libelf-dev
 
 # Setup kernel config
@@ -38,7 +38,7 @@ make -j $(nproc)
 1. Copy `arch/x86/boot/bzImage` to somewhere outside WSL2 (`/mnt/c/Users/${USER}/Desktop`)
 2. Shutdown WSL2 `wsl --shutdown`
 3. Make a copy of `c:\Windows\System32\lxss\tools\kernel` to `c:\Windows\System32\lxss\tools\kernel.bak.yyyymmdd` (the original kernel is still in another location)
-4. Copy bzImage to `c:\Windows\System32\lxss\tools\kernel`. Might need to copy through explorer.exe because of permissions issues.
+4. Copy `bzImage` to `c:\Windows\System32\lxss\tools\kernel`. Make sure to delete `kernel` (you already has a backup) and rename `bzImage` to `kernel`. Might need to do it through explorer.exe because of permissions issues
 
 ## Install K3s on WSL
 
@@ -47,7 +47,8 @@ You can't install k3s using the curl script because there is no supervisor (syst
 1. Download k3s binary from https://github.com/rancher/k3s/releases/latest
 ```bash
 # wget https://github.com/rancher/k3s/releases/download/v1.19.3%2Bk3s3/k3s
-wget https://github.com/k3s-io/k3s/releases/download/v1.20.11%2Bk3s1/k3s
+# wget https://github.com/k3s-io/k3s/releases/download/v1.20.11%2Bk3s1/k3s
+wget https://github.com/k3s-io/k3s/releases/download/v1.23.1%2Bk3s2/k3s
 ```
 2. `chmod +x k3s`
 3. Run k3s 
