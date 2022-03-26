@@ -12,25 +12,20 @@ For a local Kubernetes cluster, depending on available resources, recommended op
   - [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-on-wsl-install.md).
 
 ### Install Kubeflow pipelines (If using K3s)
-> Note: This is a standalone deployment of pipelines. Check updated standalone deployment docs:
-> - [Standalone](https://www.kubeflow.org/docs/components/pipelines/installation/standalone-deployment/).
-> - [Standalone local cluster](https://www.kubeflow.org/docs/components/pipelines/installation/localcluster-deployment/#deploying-kubeflow-pipelines).
+> Note: This is a standalone deployment of pipelines. Check updated standalone deployment doc: [Standalone local cluster deployment](https://www.kubeflow.org/docs/components/pipelines/installation/localcluster-deployment/#deploying-kubeflow-pipelines).
 
 ```bash
-export PIPELINE_VERSION=1.7.0-rc.4
-
+export PIPELINE_VERSION=1.8.1
 kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=$PIPELINE_VERSION"
-
 kubectl wait --for condition=established --timeout=60s crd/applications.app.k8s.io
-
-kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env/platform-agnostic-pns?ref=$PIPELINE_VERSION"
+kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env/platform-agnostic-emissary?ref=$PIPELINE_VERSION"
 
 kubectl get pods -n kubeflow
 ```
 
 ## Backend
 ### Setting up local dev environment for Kubeflow Pipelines
-1. Install Go 1.13.x
+1. Install Go 1.16.x
 
 2. Install dependencies
 ```
