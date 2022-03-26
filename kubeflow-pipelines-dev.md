@@ -5,13 +5,28 @@ Currently API server is not able to run locally as it performs a kubernetes clie
 ## Provisioning kubernetes cluster with Kubeflow Pipelines
 For development you need a local or remote cluster so Pipelines code can connect to services like MinIO, Mysql and Kubernetes API Server.
 
-For a local Kubernetes cluster, depending on available resources, recommended options are:
-- [MiniKF](https://www.kubeflow.org/docs/started/workstation/getting-started-minikf/). Full-fledged local kubeflow deployment by Arrikto.
-- [K3S](https://k3s.io/). Lightweight and fully functional certified distribution of Kubernetes by Rancher. Alternative to miniKF if RAM or CPU resources are scarce. If using this option, need to install Kubeflow pipelines on top of it.
-  - [Install k3s on Linux/Mac](https://k3s.io/).
-  - [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-on-wsl-install.md).
+Local Kubernetes cluster popular options are kind, k3ai or k3s. [k3s](https://k3s.io/) is a lightweight and fully functional certified distribution of Kubernetes by Rancher ideal when RAM or CPU resources are scarce.
+  - [Install K3s bundled in Rancher Desktop](https://rancherdesktop.io/)
+  - [Install k3s on Linux/Mac](https://k3s.io/)
+  - [Install k3s on WSL 2](https://github.com/arllanos/tekhno/blob/master/k3s-on-wsl-install.md)
 
-### Install Kubeflow pipelines (If using K3s)
+### Pull the images (Optional if using K3s)
+If internet connectivity is not good, pre-pulling images will help you avoid ImagePullBackOff issues while installing.
+```bash
+export PIPELINE_VERSION=1.8.1
+docker pull gcr.io/ml-pipeline/metadata-envoy:$PIPELINE_VERSION
+docker pull gcr.io/ml-pipeline/viewer-crd-controller:$PIPELINE_VERSION
+docker pull gcr.io/ml-pipeline/api-server:$PIPELINE_VERSION
+docker pull gcr.io/ml-pipeline/frontend:$PIPELINE_VERSION
+docker pull gcr.io/ml-pipeline/scheduledworkflow:$PIPELINE_VERSION
+docker pull gcr.io/ml-pipeline/cache-server:$PIPELINE_VERSION
+docker pull gcr.io/ml-pipeline/persistenceagent:$PIPELINE_VERSION
+docker pull gcr.io/ml-pipeline/visualization-server:$PIPELINE_VERSION
+docker pull gcr.io/ml-pipeline/cache-deployer:$PIPELINE_VERSION
+docker pull gcr.io/ml-pipeline/metadata-writer:$PIPELINE_VERSION
+```
+
+### Install Kubeflow pipelines
 > Note: This is a standalone deployment of pipelines. Check updated standalone deployment doc: [Standalone local cluster deployment](https://www.kubeflow.org/docs/components/pipelines/installation/localcluster-deployment/#deploying-kubeflow-pipelines).
 
 ```bash
